@@ -172,13 +172,13 @@ class BankSystem:
 
             if num_rows > 0:
 
-                header_format = "{:<15} {:<}".format('\nClient ID', 'Name')
+                header_format = "{:<15} {:<}".format('\nClient ID', 'Name') # controls the internal padding of table
                 print(header_format)
-                print('-' * (len(header_format) + 41))  # Adjust the multiplier as needed
+                print('-' * (len(header_format) + 41)) # controls the length of dashes in the header.
 
                 # Print the data
                 max_name_length = max(len(f"{client_data[1]} {client_data[2]} {client_data[3]}") for client_data in all_clients_data)
-                name_format = "{:<15} {:<" + str(max_name_length) + "}"
+                name_format = "{:<14} {:<" + str(max_name_length) + "}" # controls the content padding of the table.
 
                 # Print the data
                 for client_data in all_clients_data:
@@ -191,7 +191,7 @@ class BankSystem:
 
                     # Print the data in the dynamically determined column width
                     print(name_format.format(client_id, name))
-                    print('-' * (20 + max_name_length))
+                    print('-' * (20 + max_name_length)) # controls the length of the dashes inside the table
 
                 # Prints the total number of clients found after the query.
                 print(f"{invoke_access.FIELD_LABEL_PROMPTS.get('PROMPT_09')} {num_rows} {invoke_access.FIELD_LABEL_PROMPTS.get('PROMPT_9.5')}\n")  # Print the total number of clients
@@ -202,10 +202,8 @@ class BankSystem:
                     invoke_access.drawNotAvailable(type_menu='client(s)')
                     print('=' * len(invoke_access.HEADER.get('HEADER_10')))
                 
-                #print(f"{num_rows} {invoke_access.FIELD_LABEL_PROMPTS.get('PROMPT_9.5')}")
         except mysql.connector.Error as err:
             print(f"{invoke_access.FIELD_LABEL_PROMPTS.get('ERROR_11')} {err}")
-
 
     # REMOVE CLIENT DATABASE MANAGEMENT
     def removeClient(self, client_id):
@@ -306,7 +304,7 @@ class BankSystem:
     def closeAccount(self, account_id):
         ''' Responsible for closing a bank account. '''
         try:
-            query = "DELETE FROM account WHERE AccountID = %s"
+            query = invoke_access.QUERIES.get(7)
             self.cursor.execute(query, (account_id,))
             self.db_connection.commit()
             print(f"Account ID: {account_id} closed successfully!")
@@ -451,19 +449,22 @@ class BankSystem:
                     # FIND THE CLIENT AND DISPLAY ITS DETAILS
                     elif choice == 2:
                         print(f"{invoke_access.HEADER.get('HEADER_05').upper()}")
+                        while True:
+                            try:
+                                client_id = int(input(f"\n{invoke_access.FIELD_LABEL_PROMPTS.get('PROMPT_20').title()}"))
+                                found_client = self.findClient(client_id)
 
-                        try:
-                            client_id = int(input(f"\n{invoke_access.FIELD_LABEL_PROMPTS.get('PROMPT_20').title()}"))
-                            found_client = self.findClient(client_id)
+                                if found_client:
+                                    found_client.printDetails()
+                                    print(f"{invoke_access.UI_ELEMENTS.get('ELEMENT_01')}")
+                                    break
+                                else:
+                                    print(f"Invalid input! Please enter a registered Client ID.")
+                                    print(f"{invoke_access.UI_ELEMENTS.get('ELEMENT_01')}")
+                                    continue
 
-                            if found_client:
-                                found_client.printDetails()
-                                print(f"{invoke_access.UI_ELEMENTS.get('ELEMENT_01')}")
-                            else:
-                                print(f"{invoke_access.UI_ELEMENTS.get('ELEMENT_01')}")
-
-                        except ValueError:
-                            print(f"Invalid input! Please enter a registered Client ID.")
+                            except ValueError:
+                                print(f"{invoke_access.FIELD_LABEL_PROMPTS.get('PROMPT_44')}")
                     # ... end of find client block code
                     
 
@@ -501,21 +502,25 @@ class BankSystem:
                     elif choice == 5:
                         print(f"\n{invoke_access.HEADER.get('HEADER_02').upper()}")
 
-                        try:
-                            client_id = int(input(f"{invoke_access.FIELD_LABEL_PROMPTS.get('PROMPT_34')} "))
-                            self.removeClient(client_id)
+                        while True:
+                            try:
+                                client_id = int(input(f"{invoke_access.FIELD_LABEL_PROMPTS.get('PROMPT_34')} "))
+                                self.removeClient(client_id)
+                                break
 
-                        except ValueError:
-                            print(f"Invalid input! Please enter a valid client ID.")
+                            except ValueError:
+                                print(f"Invalid input! Please enter a valid client ID.")
                     # ... end of the remove client removal.
 
 
                     # GO BACK TO THE MAIN MENU
                     elif choice == 6:
+
                         if self.previous_menu == 'main_menu':
                             self.previous_menu = self.current_menu
                             self.current_menu = 'main_menu'
                             break
+
                         elif self.previous_menu == 'account':
                             self.previous_menu = self.current_menu
                             self.current_menu = 'account'
@@ -523,6 +528,7 @@ class BankSystem:
                             break
 
                 except Exception as e:
+
                     print(f"An unexpected error occurred: {e}")
                     if self.previous_menu == 'main_menu':
                         self.previous_menu = self.previous_menu
@@ -530,6 +536,7 @@ class BankSystem:
                     elif self.previous_menu == 'account':
                         self.previous_menu = 'account'
                         self.current_menu = 'client'
+
         except Exception as main_menu_error:
             print(f"An unexpected error occurred in the main menu: {main_menu_error}")
     
@@ -553,27 +560,77 @@ class BankSystem:
             print('CURRENT_MENU: ', self.current_menu)
 
             print(f"\n{invoke_access.HEADER.get('HEADER_07').upper()}")
+
             for key, value in invoke_access.ACCOUNT_MENU_CHOICES.items():   # UI for account_menu
                 print(f"[{key}] {value}")
+
             try:
                 choice = int(input(f"\n{invoke_access.FIELD_LABEL_PROMPTS.get('PROMPT_11').title()}"))
 
                 # Call the corresponding function based on the user's input
                 selected_function = account_functions.get(choice, None)
+
                 if selected_function:
                     selected_function()
+
                 else:
                     print(f"{invoke_access.ERROR_MESSAGES.get('ERROR_02')}")
+
             except ValueError:
                 print(f"{invoke_access.ERROR_MESSAGES.get('ERROR_05')}")
                 if self.previous_menu == 'main_menu':
                     self.previous_menu == 'main_menu'
                     self.current_menu == 'account'
 
+    def getClientID(self):
+        ''' A function dedicated for getting client ID. '''
+        while True:    
+            print(f"{invoke_access.UI_ELEMENTS.get('ELEMENT_05')}")
+            
+            try:
+                # prompt user to enter client_id
+                client_id = int(input(f"{invoke_access.FIELD_LABEL_PROMPTS.get('PROMPT_12')}"))
+                print(f"{invoke_access.UI_ELEMENTS.get('ELEMENT_05')}")
+
+                if self.validateClientID(client_id): # breaks loop and go back to handle_open_acc function.
+                    return client_id
+
+                else:   # continues the loop until a registered ClientID (CID) is provided.
+                    continue
+
+            except ValueError as ve:
+                print(f"{invoke_access.ERROR_MESSAGES.get('ERROR_05')} {ve}")
+
+    def validateClientID(self, client_id):
+
+        # validate before returning
+        if self.checkClientIDExistence(client_id): # clientID is found
+            print(f"\nYou are CURRENTLY USING ClientID: {client_id}!!")
+            return client_id
+                
+        else: 
+            print(f"\nYou CANNOT USE ClientID: {client_id}, register it first!")
+            return None  # Returning None to indicate that the client_id is not valid
+
+
+    def checkClientIDExistence(self, client_id):
+        ''' A function dedicated for validating whether the clientID is on the DB using query. '''
+        try:
+
+            query = invoke_access.QUERIES.get(1)
+            self.cursor.execute(query, (client_id,))
+            count = self.cursor.fetchone()[0]
+
+            # Return True if the clientID exists, otherwise False
+            return count > 0
+        
+        except Exception as e:
+            print(f"{invoke_access.ERROR_MESSAGES.get('ERROR_31')} {e}")
+
 
     def handle_open_acc(self):
         ''' Handles the few necessary setups for opening a new account '''
-        print(f"{invoke_access.HEADER.get('HEADER_09').upper()}")
+        print(f"{invoke_access.HEADER.get('HEADER_09').upper()}\n")
 
         for key, value in invoke_access.OPEN_ACCOUNT_DIALOG.items():
             print(f"[{key}] {value}")
@@ -581,27 +638,171 @@ class BankSystem:
         try:
             # Ask user if they're new or existing client
             isNew = int(input(f"\n{invoke_access.FIELD_LABEL_PROMPTS.get('PROMPT_11').title()}"))
+            print("\n")
+            
             match isNew:
+
                 case 1: # if client is new to the system
                     print(f"\n{invoke_access.FIELD_LABEL_PROMPTS.get('PROMPT_35')}")
                     self.previous_menu = self.current_menu
                     self.current_menu = 'client'
+                    print("=" * len(invoke_access.HEADER.get('HEADER_09')))
                     self.clientManagementMenu()
+
+
                 case 0: # if client chooses existing
-                    client_id = int(input("Enter Client ID: "))
-                    account_id = int(input("Enter Account ID: "))
+                    client_id = self.getClientID()
+                    
+                    # check first whether the user wants to use the automatic assigning ID feature
+                    userPref = self.getUserPreferences()
+
+                    # set the AccID based on the preference user has GIVEN
+                    account_id = self.isAutomaticOrManual(userPref)
+
+
                     initial_balance = float(input("Enter Initial Balance: "))
                     self.openAccount(account_id, client_id, initial_balance)
+
                 case _:
                     print(f"{invoke_access.ERROR_MESSAGES.get('ERROR_02')}")
                     #self.previous_menu = self.current_menu
                     self.current_menu = 'account'
-        except:
-            print("An error occurred in the match statement.")
+
+        except EOFError:
+            print(f"{invoke_access.ERROR_MESSAGES.get('ERROR_29')}")
+
+        except ValueError:
+            print("An INPUT MISMATCH has occured.")
+
+    def isAutomaticOrManual(self, userPref):
+        ''' This will be the function that will set account ID assigning (automatically or manually) '''
+        if userPref.upper() == 'Y': # Y means automatic
+
+            # Generate a new account_id
+            account_id = self.generateNewAccID()
+            print(f"{invoke_access.FIELD_LABEL_PROMPTS.get('PROMPT_42')}{account_id} {invoke_access.FIELD_LABEL_PROMPTS.get('PROMPT_43')}")
+            return account_id
+
+        elif userPref.upper() == 'N':   # N means manual
+            account_id = self.getAccountID()
+            return account_id # return whatever value of accound_id to the handle_open_acc
+
+    def generateNewAccID(self):
+        ''' This generates new Account ID based on existing db. '''
+        try:
+            query = invoke_access.QUERIES.get(5) # minimum query for db
+            self.cursor.execute(query)
+            min_account_id = self.cursor.fetchone()[0]
+
+            if min_account_id is not None:
+                # If there are skipped and unused account_ids that is available on DB, use it.
+                return min_account_id
+            else:
+                # If there no skipped and unused account_ids.
+                query = invoke_access.QUERIES.get(4) # maximum query for db
+                self.cursor.execute(query)
+                max_account_id = self.cursor.fetchone()[0]
+
+                # If no existing account_id, start from 1; otherwise, increment by 1
+                new_account_id = 1 if max_account_id is None else  max_account_id + 1
+
+                return new_account_id
+
+        except Exception as e:
+            print(f"{invoke_access.ERROR_MESSAGES.get('ERROR_31')} {e}")
+
+
+    def getAccountID(self):
+        ''' Gets the account ID manually through a PROMPT. '''
+        while True:    
+            print(f"{invoke_access.UI_ELEMENTS.get('ELEMENT_05')}")
+            
+            try:
+                # prompts user to enter account_id
+                account_id = int(input(f"{invoke_access.FIELD_LABEL_PROMPTS.get('PROMPT_42')}"))
+                print(f"{invoke_access.UI_ELEMENTS.get('ELEMENT_05')}")
+
+                if self.validateAccountID(account_id): # breaks loop and go back to handle_open_acc function.
+                    return account_id
+
+                else:   # continues the loop until a registered AccountID (AID) is provided.
+                    continue
+            
+            except EOFError:
+                print(f"{invoke_access.ERROR_MESSAGES.get('ERROR_29')}")
+
+            except ValueError as ve:
+                print(f"{invoke_access.ERROR_MESSAGES.get('ERROR_05')} {ve}")
+
+    def validateAccountID(self, account_id):
+        ''' '''
+        # validate before returning
+        if self.checkAccountIDExistence(account_id): # clientID is found
+            print(f"\nThis ACCOUNT ID: {account_id} is already TAKEN!!!")
+            return None
+        
+        else: 
+            print(f"\nYou've SELECTED AccountID No. {account_id}.")
+            return account_id  # Returning None to indicate that the client_id is not valid
+    
+    def checkAccountIDExistence(self, account_id):
+        ''' Check the availability of AccountID is already taken. '''
+        try:
+
+            query = invoke_access.QUERIES.get(2)
+            self.cursor.execute(query, (account_id,))
+            count = self.cursor.fetchone()[0]
+
+            # Return True if the clientID exists, otherwise False
+            return count > 0
+        
+        except Exception as e:
+            print(f"{invoke_access.ERROR_MESSAGES.get('ERROR_31')} {e}")
+    
+
+    def getUserPreferences(self):
+        ''' Prompt the user whether to fill the AccountID automatically, or manually. '''
+        while True:
+            try:
+                # append the dictionary to a variable created from another class.
+                yes_or_no = invoke_access.YES_OR_NO_DIALOG.items()
+
+                # prints the UI
+                print(f"\n{invoke_access.HEADER.get('HEADER_11').title()}")
+                for key, value in yes_or_no:
+                    print(f"[{key}] : {value}")  # prints the specified UI Dialog
+
+                # present a prompt to the user
+                choice = str(input(f"\n{invoke_access.FIELD_LABEL_PROMPTS.get('PROMPT_41')} : "))
+
+                # logic for the yes or no dialog
+                if choice.upper() == 'Y':
+                    # Trigger the switch for automatic assigning of AccID
+                    userPref = choice
+                    return userPref   # go back to handle_open_acc mod with a returned value (y)
+
+                elif choice.upper() == 'N':
+                    # Proceed with the manual selection of AccID
+                    userPref = choice
+                    return userPref # go back to handle_open_acc mod with a returned value (n)
+
+                else:
+                    print(f'\n{invoke_access.ERROR_MESSAGES.get("ERROR_30")}')
+                    continue    # continues the loop until chose among valid choices.
+
+            except EOFError:
+                # handles the instances where the user uses Ctrl + Keys on terminal.
+                print(f"{invoke_access.ERROR_MESSAGES.get('ERROR_29')}")
+
+            except Exception as e:
+                # handle unexpected exceptions
+                print(f"{invoke_access.ERROR_MESSAGES.get('ERROR_13').capitalize()} {e}")
+
+
 
     def handle_listing(self):
         ''' Responsible for showing all accounts and associated clients with it in the database. '''
-        query = "SELECT * FROM ACCOUNT"
+        query = invoke_access.QUERIES.get(3)
         print(f"{invoke_access.HEADER.get('HEADER_10').upper()}")
         self.showAllAccounts(query)
 
@@ -658,8 +859,6 @@ class BankSystem:
             # Handles other unexpected errors
             print(f"Unexpected error: {e}")
 
-            
-
     def handle_show_bal(self):
         # Handles the displaying of account balance
         account_id = int(input("Enter Account ID: "))
@@ -680,7 +879,8 @@ class BankSystem:
 
     def handle_close_acc(self):
         # Handles closing an account
-        account_id = int(input("Enter Account ID to Close: "))
+        
+        account_id = self.getAccountID()
         self.closeAccount(account_id)
 
     def handle_exit(self):
