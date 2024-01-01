@@ -20,7 +20,7 @@ class BankSystem:
                 host="localhost",
                 user="root",
                 password="",
-                database="bank_system"
+                database="banking_system"
             )
             self.cursor = self.db_connection.cursor()
 
