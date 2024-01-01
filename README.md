@@ -1,6 +1,11 @@
 # simple-banking-system
 An individual case study initialized by GMBrhylle for requirements of their professor.
 
+_**DEPENDENCIES**_ (run this on terminal)
+<br />(a) MySqlClient: `pip install mysqlclient`
+<br />(b) MySqlConnector: `pip install mysql-connector-python`
+<br />(c) PrettyTable: `pip install prettytable `
+
 BankSystem - the entry-point of the system (this is the runnable py script)
 
 _GUIDE FOR INSTALLATION_
