@@ -1,7 +1,6 @@
 import re
 import sys
 import mysql.connector
-import msvcrt
 import prettytable as pt
 from BankClient import BankClient
 from datetime import datetime, date
