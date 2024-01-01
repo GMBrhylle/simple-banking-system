@@ -1,4 +1,5 @@
 class BankAccount:
+
     def __init__(self, account_id, client_id, account_type, balance=0.0):
         self.account_id = account_id
         self.client_id = client_id
@@ -15,8 +16,8 @@ class BankAccount:
         return self.account_id
 
     def printDetails(self):
-        print(f"Account ID: {self.account_id}")
-        print(f"Client ID: {self.client_id}")
+        print(f"Account ID # {self.account_id}")
+        print(f"Client ID # {self.client_id}")
         print(f"Account Type: {self.account_type}")
         print(f"Balance: {self.balance}")
 
