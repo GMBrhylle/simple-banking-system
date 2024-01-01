@@ -1,1 +1,1 @@
-return acc
+print('=' * len(header_msg))

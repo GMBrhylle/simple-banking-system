@@ -9,20 +9,22 @@ class StringConstant:
         return draw_results
 
     # Generate repetitive dashes and assign them to each respective dictionary "keys"
-    UI_ELEMENTS['ELEMENT_01'] = drawLine('-', 38) # long dash line
-    UI_ELEMENTS['ELEMENT_02'] = drawLine('=', 7) # header short dash lines
-    UI_ELEMENTS['ELEMENT_03'] = drawLine('-', 7) # short dash line
-    UI_ELEMENTS['ELEMENT_04'] = drawLine('=', 21) # header long dash lines
+    UI_ELEMENTS['ELEMENT_01'] = drawLine('-', 38)  # long dash line
+    UI_ELEMENTS['ELEMENT_02'] = drawLine('=', 7)  # header short dash lines
+    UI_ELEMENTS['ELEMENT_03'] = drawLine('-', 7)  # short dash line
+    UI_ELEMENTS['ELEMENT_04'] = drawLine('=', 21)  # header long dash lines
     UI_ELEMENTS['ELEMENT_05'] = drawLine('-', 24)
-    UI_ELEMENTS['ELEMENT_06'] = drawLine(' ', 4) # spaces
+    UI_ELEMENTS['ELEMENT_06'] = drawLine(' ', 4)  # spaces
     UI_ELEMENTS['ELEMENT_07'] = drawLine(' ', 12)
+    UI_ELEMENTS['ELEMENT_08'] = drawLine('-', 30)
 
     def drawNotAvailable(type_menu):
         box_size = 5
         text_to_display = f"No {type_menu} are found."
 
         # Calculate left padding to center the box
-        left_padding = (30 - box_size * 4) // 2  # Assuming terminal width is 30 characters
+        # Assuming terminal width is 30 characters
+        left_padding = (30 - box_size * 4) // 2
         print("\n")
         for i in range(box_size):
             # Print left padding
@@ -41,25 +43,32 @@ class StringConstant:
             print("")
         print("\n")
 
-    
-
     HEADER = {
         'HEADER_01': f'\n{UI_ELEMENTS.get("ELEMENT_04")} displaying all clients {UI_ELEMENTS.get("ELEMENT_04")}',
-        'HEADER_02': f'\n{UI_ELEMENTS.get("ELEMENT_02")} removing clients {UI_ELEMENTS.get("ELEMENT_02")}',
-        'HEADER_03': f'\n{UI_ELEMENTS.get("ELEMENT_02")} creating client entry {UI_ELEMENTS.get("ELEMENT_02")}',
-        'HEADER_04': f'\n{UI_ELEMENTS.get("ELEMENT_02")} updating client entry {UI_ELEMENTS.get("ELEMENT_02")}',
-        'HEADER_05': f'\n{UI_ELEMENTS.get("ELEMENT_02")} searching client entry {UI_ELEMENTS.get("ELEMENT_02")}',
+        'HEADER_02': f'\n{UI_ELEMENTS.get("ELEMENT_04")} removing clients {UI_ELEMENTS.get("ELEMENT_04")}',
+        'HEADER_03': f'\n{UI_ELEMENTS.get("ELEMENT_04")} creating client entry {UI_ELEMENTS.get("ELEMENT_04")}',
+        'HEADER_04': f'\n{UI_ELEMENTS.get("ELEMENT_04")} updating client entry {UI_ELEMENTS.get("ELEMENT_04")}',
+        'HEADER_05': f'\n{UI_ELEMENTS.get("ELEMENT_04")} searching client entry {UI_ELEMENTS.get("ELEMENT_04")}',
         'HEADER_06': f'\n--> client management <--',
         'HEADER_07': f'\n--> account management <--',
         'HEADER_08': f'\t⌂ main menu ⌂',
         'HEADER_09': f'{UI_ELEMENTS.get("ELEMENT_04")} opening an account {UI_ELEMENTS.get("ELEMENT_04")}',
         'HEADER_10': f'\n{UI_ELEMENTS.get("ELEMENT_02")} displaying all accounts {UI_ELEMENTS.get("ELEMENT_02")}',
         'HEADER_11': f'{UI_ELEMENTS.get("ELEMENT_06")}→ automatic assign id ←{UI_ELEMENTS.get("ELEMENT_06")}',
+        'HEADER_12': f'\n{UI_ELEMENTS.get("ELEMENT_04")} balance inquiry {UI_ELEMENTS.get("ELEMENT_04")}',
+        'HEADER_13': f'\n{UI_ELEMENTS.get("ELEMENT_04")} deposit/withdraw money {UI_ELEMENTS.get("ELEMENT_04")}',
+        'HEADER_14': f'{UI_ELEMENTS.get("ELEMENT_06")}→ depositing money... ←{UI_ELEMENTS.get("ELEMENT_06")}',
+        'HEADER_15': f'{UI_ELEMENTS.get("ELEMENT_06")}→ withdrawing money... ←{UI_ELEMENTS.get("ELEMENT_06")}',
+        'HEADER_16': f'{UI_ELEMENTS.get("ELEMENT_04")} closing an account {UI_ELEMENTS.get("ELEMENT_04")}',
+        'HEADER_17': f'{UI_ELEMENTS.get("ELEMENT_06")}→ delete again ←{UI_ELEMENTS.get("ELEMENT_06")}',
+
     }
+
+    UI_ELEMENTS['ELEMENT_09'] = drawLine("-", len(HEADER.get('HEADER_16')))
 
     FIELD_LABEL_PROMPTS = {
         'PROMPT_01': 'Select a Type of ID:',
-        'PROMPT_02': 'Terminating the program...',
+        'PROMPT_02': 'Happy New Year!',
         'PROMPT_03': 'One (1) valid ID is acceptable if the ID is a Passport, Driver’s License, PRC ID, UMID, SSS ID, PhilSys ID, or School ID (for minors).',
         'PROMPT_04': 'Enter the number corresponding to the Type of ID: ',
         'PROMPT_05': 'Please provide at least one more valid ID from the accepted list:',
@@ -71,7 +80,7 @@ class StringConstant:
         'PROMPT_9.6': 'account(s) is FOUND',
         'PROMPT_10': 'Client with an ID [',
         'PROMPT_10.5': '] has been removed successfully!',
-        'PROMPT_11': 'enter your choice: ',
+        'PROMPT_11': 'enter your choice: '.title(),
         'PROMPT_12': 'Enter Client ID * : ',
         'PROMPT_13': 'Enter First Name * : ',
         'PROMPT_14': 'Enter Middle Name : ',
@@ -101,12 +110,16 @@ class StringConstant:
         'PROMPT_38': 'Y : ' + 'yes'.title() + ' to ' + 'confirm'.upper(),
         'PROMPT_39': 'any'.title() + ' : Key to ' + 'cancel'.upper(),
         'PROMPT_40': 'operation'.title() + ' has been ' + 'cancelled'.upper(),
-        'PROMPT_41':'Turn ON the AUTOMATIC ASSIGN of ID?"',
+        'PROMPT_41': 'Turn ON the AUTOMATIC ASSIGN of ID?"',
         'PROMPT_42': 'Enter Account ID * : ',
         'PROMPT_43': '(autofilled by system)',
-        'PROMPT_44' : 'Input mismatch occured, please try again.',
+        'PROMPT_44': 'Input mismatch occured, please try again.',
+        'PROMPT_45': '\nEnter Amount to Deposit: ',
+        'PROMPT_46': '\nEnter Amount to Withdraw: ',
+        'PROMPT_47': 'You have INSUFFICIENT Funds to WITHDRAW.',
+        'PROMPT_48': 'Please WRITE "CONFIRM" to CONTINUE.',
     }
-    
+
     ERROR_MESSAGES = {
         'ERROR_01': 'Error:',
         'ERROR_02': 'Invalid choice. Please try again.',
@@ -141,9 +154,10 @@ class StringConstant:
         'ERROR_29': 'Input has been' + ' interrupted, '.upper() + 'please try again.'.lower(),
         'ERROR_30': 'Only "Y" and "N" (not case-sensitive)',
         'ERROR_31': 'Error executing such query:',
+        'ERROR_32': 'POSITIVE Values are only ALLOWED.',
         # Add more error messages here as needed
     }
-    
+
     MAIN_MENU_CHOICES = {
         '1': 'Client Management',
         '2': 'Account Management',
@@ -162,15 +176,14 @@ class StringConstant:
     ACCOUNT_MENU_CHOICES = {
         1: "Show All Accounts",
         2: 'Show Account Balance',
-        3: 'Deposit Money',
-        4: 'Withdraw Money',
-        5: 'Open Account',
-        6: 'Close Account', 
-        7: 'Back to Main Menu'
+        3: 'Deposit/Withdraw Money',
+        4: 'Open Account',
+        5: 'Close Account',
+        6: 'Back to Main Menu',
     }
 
     OPEN_ACCOUNT_DIALOG = {
-        0: 'EXISTING Client', 
+        0: 'EXISTING Client',
         1: 'NEW Client',
     }
 
@@ -186,5 +199,22 @@ class StringConstant:
         4: "SELECT MAX(AccountID) FROM account",
         5: "SELECT MIN(AccountID) FROM account WHERE AccountID NOT IN (SELECT AccountID FROM Account)",
         6: "SELECT AccountID FROM account",
-        7: "DELETE FROM account WHERE AccountID = %s"
+        7: "DELETE FROM account WHERE AccountID = %s",
+        8: "SELECT Balance FROM account WHERE AccountID = %s AND ClientID = %s",
+        9: "SELECT FirstName, MiddleName, LastName FROM client WHERE ClientID = %s",
+        10: "",  # automatically generated with the use of the main class "BankSystem"
+        11: "SELECT balance FROM account WHERE AccountID = %s",
+        12: "SELECT ClientID FROM account WHERE AccountID = %s",
+        13: "SELECT c.FirstName, c.MiddleName, c.LastName FROM client c JOIN account a ON c.ClientID = a.clientID WHERE a.accountID = %s;",
+    }
+
+    DEPOSIT_WITHDRAW_DIALOG = {
+        'D': 'Deposit Savings',
+        'W': 'Withdraw Savings',
+    }
+
+    CONFIRM_DELETION_DIALOG = {
+        1: 'This will DELETE the SPECIFIED Account.',
+        2: 'And its ASSOCIATED DATA ENTRY on OUR SYSTEM.',
+        3: 'If you WANT TO Change AccID, type "BACK."'
     }
